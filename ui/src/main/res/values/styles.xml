@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PickerView">
+        <attr name="selectColor" format="color" />
+        <attr name="otherColor" format="color" />
+    </declare-styleable>
+</resources>
