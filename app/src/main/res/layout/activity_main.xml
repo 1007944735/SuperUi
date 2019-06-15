@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.sgevf.ui.PickerView
-        android:id="@+id/pickerView"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.sgevf.ui.RefreshLayout.RefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    </com.sgevf.ui.PickerView>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+        </ListView>
+    </com.sgevf.ui.RefreshLayout.RefreshLayout>
 </LinearLayout>
