@@ -1,13 +1,13 @@
 package com.sgevf.ui.RefreshLayout;
 
-public interface IHeaderCallBack {
+public interface IFooterCallBack {
     /**
-     * 显示headerView
+     * FooterView显示
      */
     void show();
 
     /**
-     * 隐藏headerView
+     * FooterView隐藏
      */
     void hide();
 
@@ -17,24 +17,24 @@ public interface IHeaderCallBack {
     void onStateNormal();
 
     /**
-     * 准备刷新状态，下拉未刷新
+     * 上拉刷新状态
      */
     void onStatePull();
 
     /**
-     * 刷新状态
-     */
-    void onStateRefreshing();
-
-    /**
-     * 刷新结束状态
-     * @param
+     * 下拉释放状态
      */
     void onStateRelease();
 
     /**
-     * 获取headerView高度
+     * 刷新状态
+     * @param
+     */
+    void onStateRefreshing();
+
+    /**
+     * FooterView高度
      * @return
      */
-    int getHeaderHeight();
+    int getFooterHeight();
 }

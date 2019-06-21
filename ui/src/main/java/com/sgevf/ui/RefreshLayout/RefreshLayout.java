@@ -7,9 +7,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewTreeObserver;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.sgevf.ui.utils.ScreenUtils;
 
 public class RefreshLayout extends LinearLayout implements View.OnTouchListener {
     private View mHeaderView;
@@ -21,9 +25,14 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
     private boolean layoutOnce;
     //headerView高度
     private int mHeaderHeight;
+    //footerView高度
+    private int mFooterHeight;
     private LayoutParams headerViewParam;
+    private LayoutParams footerViewParam;
     //是否可以下拉
     private boolean ableToPull;
+    //是否可以上拉
+    private boolean ableToRelease;
     private float lastY;
 
     private RefreshStatus status;
@@ -44,6 +53,7 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
         setOrientation(VERTICAL);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         addHeaderView();
+        addFooterView();
         status = RefreshStatus.STATUS_NORMAL;
     }
 
@@ -52,6 +62,7 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
         super.onLayout(changed, l, t, r, b);
         if (changed && !layoutOnce) {
             mHeaderHeight = ((IHeaderCallBack) mHeaderView).getHeaderHeight();
+            mFooterHeight= ((IFooterCallBack) mFooterView).getFooterHeight();
             headerViewParam = (LayoutParams) mHeaderView.getLayoutParams();
             headerViewParam.topMargin = -mHeaderHeight;
             mHeaderView.setLayoutParams(headerViewParam);
@@ -68,11 +79,27 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
         addView(mHeaderView, 0);
     }
 
+    private void addFooterView() {
+        if (mFooterView == null) {
+            mFooterView = new FooterView(getContext());
+        }
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                addView(mFooterView,2);
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+    }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         ableToPull = isAbleToPull(event);
-        if (ableToPull) {
+        ableToRelease=isAbleToRelease(event);
+        Log.d("TAG", "onTouch: "+ableToRelease);
+        if (ableToPull||ableToRelease) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     lastY = event.getRawY();
@@ -91,13 +118,19 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
                         headerViewParam.topMargin = distance / 2 - mHeaderHeight;
                         mHeaderView.setLayoutParams(headerViewParam);
                     }
+
+//                    if(ableToRelease){
+//                        footerViewParam = (LayoutParams) mFooterView.getLayoutParams();
+//                        footerViewParam.bottomMargin=distance / 2 - mFooterHeight;
+//                        mFooterView.setLayoutParams(footerViewParam);
+//                    }
                     break;
                 case MotionEvent.ACTION_UP:
                 default:
                     if (status == RefreshStatus.STATUS_RELEASE_TO_REFRESH) {
                         startRefreshAnimation();
                         //执行刷新任务
-                        if(listener!=null){
+                        if (listener != null) {
                             listener.onRefresh();
                         }
                     } else if (status == RefreshStatus.STATUS_PULL_TO_REFRESH) {
@@ -106,7 +139,7 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
                     }
                     break;
             }
-            if(status==RefreshStatus.STATUS_RELEASE_TO_REFRESH||status==RefreshStatus.STATUS_PULL_TO_REFRESH){
+            if (status == RefreshStatus.STATUS_RELEASE_TO_REFRESH || status == RefreshStatus.STATUS_PULL_TO_REFRESH) {
                 updateHeaderView();
                 mContentView.setPressed(false);
                 mContentView.setFocusable(false);
@@ -118,10 +151,27 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
     }
 
     /**
+     * 判断是否上拉
+     * @param event
+     * @return
+     */
+    private boolean isAbleToRelease(MotionEvent event) {
+        if(mContentView!=null){
+            if(mContentView.getChildCount()==0) {
+                return false;
+            }
+            ableToRelease=!mContentView.canScrollVertically(1);
+        }else {
+            ableToRelease=false;
+        }
+        return ableToRelease;
+    }
+
+    /**
      * 更新下拉头信息
      */
     private void updateHeaderView() {
-        switch (status){
+        switch (status) {
             case STATUS_NORMAL:
                 ((IHeaderCallBack) mHeaderView).onStateNormal();
                 break;
@@ -132,7 +182,7 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
                 ((IHeaderCallBack) mHeaderView).onStatePull();
                 break;
             case STATUS_RELEASE_TO_REFRESH:
-                ((IHeaderCallBack) mHeaderView).onStateRelease(true);
+                ((IHeaderCallBack) mHeaderView).onStateRelease();
                 break;
         }
     }
@@ -160,45 +210,45 @@ public class RefreshLayout extends LinearLayout implements View.OnTouchListener 
         return ableToPull;
     }
 
-    public void finishRefreshing(){
+    public void finishRefreshing() {
         //隐藏下拉头
         startHideAnimation();
     }
 
-    public void setRefreshListener(RefreshListener listener){
-        this.listener=listener;
+    public void setRefreshListener(RefreshListener listener) {
+        this.listener = listener;
     }
 
-    private void startHideAnimation(){
-        status=RefreshStatus.STATUS_NORMAL;
+    private void startHideAnimation() {
+        status = RefreshStatus.STATUS_NORMAL;
         updateHeaderView();
-        ValueAnimator animator=ValueAnimator.ofInt(headerViewParam.topMargin,-mHeaderHeight);
+        ValueAnimator animator = ValueAnimator.ofInt(headerViewParam.topMargin, -mHeaderHeight);
         animator.setInterpolator(new LinearInterpolator());
         animator.setDuration(200);
         animator.start();
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int a= (int) animation.getAnimatedValue();
-                headerViewParam.topMargin=a;
+                int a = (int) animation.getAnimatedValue();
+                headerViewParam.topMargin = a;
                 mHeaderView.setLayoutParams(headerViewParam);
             }
         });
     }
 
-    private void startRefreshAnimation(){
-        status=RefreshStatus.STATUS_REFRESHING;
+    private void startRefreshAnimation() {
+        status = RefreshStatus.STATUS_REFRESHING;
         updateHeaderView();
-        Log.d("TAG", "startRefreshAnimation: "+headerViewParam.topMargin);
-        ValueAnimator animator=ValueAnimator.ofInt(headerViewParam.topMargin,0);
+        Log.d("TAG", "startRefreshAnimation: " + headerViewParam.topMargin);
+        ValueAnimator animator = ValueAnimator.ofInt(headerViewParam.topMargin, 0);
         animator.setInterpolator(new LinearInterpolator());
         animator.setDuration(200);
         animator.start();
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int a= (int) animation.getAnimatedValue();
-                headerViewParam.topMargin=a;
+                int a = (int) animation.getAnimatedValue();
+                headerViewParam.topMargin = a;
                 mHeaderView.setLayoutParams(headerViewParam);
             }
         });
