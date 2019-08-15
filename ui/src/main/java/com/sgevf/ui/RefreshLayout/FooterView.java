@@ -73,6 +73,6 @@ public class FooterView extends LinearLayout implements IFooterCallBack {
 
     @Override
     public int getFooterHeight() {
-        return getHeight();
+        return getMeasuredHeight();
     }
 }

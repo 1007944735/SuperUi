@@ -4,4 +4,9 @@
         <attr name="selectColor" format="color" />
         <attr name="otherColor" format="color" />
     </declare-styleable>
+    
+    <style name="DialogBottomAnimation" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/pop_up</item>
+        <item name="android:windowExitAnimation">@anim/pop_in</item>
+    </style>
 </resources>

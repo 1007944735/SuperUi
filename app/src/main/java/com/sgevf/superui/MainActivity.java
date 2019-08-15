@@ -1,15 +1,21 @@
 package com.sgevf.superui;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.sgevf.ui.BoxDialog;
 import com.sgevf.ui.RefreshLayout.RefreshLayout;
 import com.sgevf.ui.RefreshLayout.RefreshListener;
+import com.sgevf.ui.WebLoadingActivity;
+import com.sgevf.ui.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +25,6 @@ public class MainActivity extends AppCompatActivity implements RefreshListener {
     ArrayAdapter<String> adapter;
     List<String> names;
     RefreshLayout refresh;
-    Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            refresh.finishRefreshing();
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +42,31 @@ public class MainActivity extends AppCompatActivity implements RefreshListener {
 
     @Override
     public void onRefresh() {
-        new  TestAsync().execute();
+        new  TestAsync(0).execute();
+    }
+
+    @Override
+    public void onMore() {
+        new  TestAsync(1).execute();
+    }
+
+    public void showDialog(View view) {
+        DialogHelper.showDialog(this,TestDialog.class);
+//        startActivity(new Intent(this,WebLoadingActivity.class).putExtra("url","https://www.baidu.com/"));
     }
 
     public class TestAsync extends AsyncTask<Void,Integer,Integer>{
+        int type;
+        public TestAsync(int type){
+            this.type=type;
+        }
         @Override
         protected void onPostExecute(Integer integer) {
-            refresh.finishRefreshing();
+            if(type==0) {
+                refresh.finishHeadRefreshing();
+            }else if(type==1){
+                refresh.finishFootRefreshing();
+            }
         }
 
         @Override
@@ -59,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements RefreshListener {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return 1;
+            return type;
         }
     }
 }

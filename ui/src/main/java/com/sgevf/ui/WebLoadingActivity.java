@@ -24,6 +24,7 @@ public class WebLoadingActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String url;
     private boolean showProgress;
+    private boolean debug = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,11 +56,14 @@ public class WebLoadingActivity extends AppCompatActivity {
         setting.setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.setWebChromeClient(new mWebChromeClient());
         webView.setWebViewClient(new mWebViewClient());
+        if (debug) {
+            webView.setWebContentsDebuggingEnabled(true);
+        }
     }
 
     private void initData() {
         url = getIntent().getStringExtra(URL);
-        showProgress=getIntent().getBooleanExtra(SHOWPROGRESS,true);
+        showProgress = getIntent().getBooleanExtra(SHOWPROGRESS, true);
     }
 
     public void load() {
@@ -105,7 +109,7 @@ public class WebLoadingActivity extends AppCompatActivity {
         }
     }
 
-    public WebView getWebView(){
+    public WebView getWebView() {
         return webView;
     }
 
@@ -123,5 +127,9 @@ public class WebLoadingActivity extends AppCompatActivity {
 
     public void setShowProgress(boolean showProgress) {
         this.showProgress = showProgress;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

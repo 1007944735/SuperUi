@@ -73,6 +73,6 @@ public class HeaderView extends LinearLayout implements IHeaderCallBack{
 
     @Override
     public int getHeaderHeight() {
-        return getHeight();
+        return getMeasuredHeight();
     }
 }
