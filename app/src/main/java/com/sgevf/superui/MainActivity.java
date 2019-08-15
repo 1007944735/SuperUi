@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements RefreshListener {
     }
 
     public void showDialog(View view) {
-        DialogHelper.showDialog(this,TestDialog.class);
-//        startActivity(new Intent(this,WebLoadingActivity.class).putExtra("url","https://www.baidu.com/"));
+//        DialogHelper.showDialog(this,TestDialog.class);
+        startActivity(new Intent(this,WebLoadingActivity.class).putExtra("url","http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
     }
 
     public class TestAsync extends AsyncTask<Void,Integer,Integer>{

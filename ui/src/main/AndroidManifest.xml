@@ -2,6 +2,8 @@
     package="com.sgevf.ui" >
 
     <application>
-        <activity android:name=".WebLoadingActivity" />
+        <activity android:name=".WebLoadingActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 </manifest>
