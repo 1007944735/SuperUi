@@ -51,6 +51,7 @@ public class WebLoadingActivity extends AppCompatActivity {
         setting.setJavaScriptEnabled(true);
         setting.setJavaScriptCanOpenWindowsAutomatically(true);
         setting.setCacheMode(WebSettings.LOAD_DEFAULT);
+        setting.setDomStorageEnabled(true);
         webView.setWebChromeClient(new mWebChromeClient());
         webView.setWebViewClient(new mWebViewClient());
         if (debug) {
