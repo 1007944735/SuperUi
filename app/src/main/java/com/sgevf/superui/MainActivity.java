@@ -1,82 +1,80 @@
 package com.sgevf.superui;
 
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.sgevf.ui.BoxDialog;
-import com.sgevf.ui.RefreshLayout.RefreshLayout;
-import com.sgevf.ui.RefreshLayout.RefreshListener;
-import com.sgevf.ui.WebLoadingActivity;
-import com.sgevf.ui.utils.DialogHelper;
+import com.sgevf.ui.RefreshRecyclerView;
+import com.sgevf.ui.refreshRecyclerView.RefreshLoadListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RefreshListener {
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    List<String> names;
-    RefreshLayout refresh;
+public class MainActivity extends AppCompatActivity implements RefreshLoadListener {
+    private RefreshRecyclerView recyclerView;
+    private TestAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView=findViewById(R.id.listView);
-        refresh=findViewById(R.id.refresh);
-        names=new ArrayList<>();
-        for(int i=0;i<20;i++){
-            names.add("数据"+i);
-        }
-        adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,names);
-        listView.setAdapter(adapter);
-        refresh.setRefreshListener(this);
+        recyclerView = findViewById(R.id.recyclerView);
+        List<String> list = new ArrayList<>();
+        adapter = new TestAdapter(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setRefreshLoadListener(this);
+        recyclerView.firstLoad();
     }
 
     @Override
-    public void onRefresh() {
-        new  TestAsync(0).execute();
+    public void loadMore() {
+        TestAsync testAsync = new TestAsync(adapter, recyclerView);
+        testAsync.execute(1);
     }
 
     @Override
-    public void onMore() {
-        new  TestAsync(1).execute();
+    public void loadRefresh() {
+        TestAsync testAsync = new TestAsync(adapter, recyclerView);
+        testAsync.execute(0);
     }
 
-    public void showDialog(View view) {
-//        DialogHelper.showDialog(this,TestDialog.class);
-        startActivity(new Intent(this,WebLoadingActivity.class).putExtra("url","http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
-    }
+    class TestAsync extends AsyncTask<Integer, Integer, String> {
+        private Integer flag;
+        private TestAdapter adapter;
+        private RefreshRecyclerView recyclerView;
 
-    public class TestAsync extends AsyncTask<Void,Integer,Integer>{
-        int type;
-        public TestAsync(int type){
-            this.type=type;
-        }
-        @Override
-        protected void onPostExecute(Integer integer) {
-            if(type==0) {
-                refresh.finishHeadRefreshing();
-            }else if(type==1){
-                refresh.finishFootRefreshing();
-            }
+        public TestAsync(TestAdapter adapter, RefreshRecyclerView recyclerView) {
+            this.adapter = adapter;
+            this.recyclerView = recyclerView;
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            flag = integers[0];
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return type;
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            List<String> list1 = new ArrayList<>();
+            for (int i = 50; i < 100; i++) {
+                list1.add(i + "");
+            }
+            adapter.addData(flag, list1);
+            recyclerView.stopRefresh(!list1.isEmpty());
         }
     }
+
+
 }

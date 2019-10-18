@@ -2,22 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <Button
+    <com.sgevf.ui.RefreshRecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="showDialog"/>
-    <com.sgevf.ui.RefreshLayout.RefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        app:noDataSrc="@layout/dialog_test">
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-        </ListView>
-    </com.sgevf.ui.RefreshLayout.RefreshLayout>
+    </com.sgevf.ui.RefreshRecyclerView>
 </LinearLayout>
