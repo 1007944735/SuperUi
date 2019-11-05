@@ -1,4 +1,4 @@
-package com.sgevf.ui;
+package com.sgevf.ui.pickerView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.sgevf.ui.R;
 import com.sgevf.ui.utils.ParseUtils;
 
 import java.util.ArrayList;

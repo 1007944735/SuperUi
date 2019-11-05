@@ -20,11 +20,11 @@
             android:gravity="center"
             android:text="加会受到" />
 
-        <com.sgevf.ui.FixedListView
+        <com.sgevf.ui.widget.FixedListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </com.sgevf.ui.FixedListView>
+        </com.sgevf.ui.widget.FixedListView>
     </LinearLayout>
 </ScrollView>

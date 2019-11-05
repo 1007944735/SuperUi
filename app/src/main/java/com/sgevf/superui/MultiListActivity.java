@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 
-import com.sgevf.ui.FixedListView;
+import com.sgevf.ui.widget.FixedListView;
 
 import java.util.Arrays;
 

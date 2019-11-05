@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sgevf.ui.BoxDialog;
+import com.sgevf.ui.widget.BoxDialog;
 
 public class TestDialog extends BoxDialog implements View.OnClickListener {
     private TextView address;

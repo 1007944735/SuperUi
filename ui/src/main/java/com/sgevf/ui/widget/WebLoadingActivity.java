@@ -1,4 +1,4 @@
-package com.sgevf.ui;
+package com.sgevf.ui.widget;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -18,6 +18,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import com.sgevf.ui.R;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebLoadingActivity extends AppCompatActivity {

@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <com.sgevf.ui.RefreshRecyclerView
+    <com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:noDataSrc="@layout/dialog_test">
 
-    </com.sgevf.ui.RefreshRecyclerView>
+    </com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.sgevf.ui;
+package com.sgevf.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

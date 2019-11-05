@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RefreshRecyclerView">
-        <attr name="noDataSrc" format="reference"/>
+        <attr name="noDataSrc" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="PickerView">
+        <attr name="selectColor" format="color" />
+        <attr name="otherColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ScrollingBanner">
+        <attr name="delayTime" format="integer"></attr>
+        <attr name="scrollTime" format="integer"></attr>
+        <attr name="scrollState" format="boolean"></attr>
+        <attr name="autoScroll" format="boolean"></attr>
     </declare-styleable>
 </resources>

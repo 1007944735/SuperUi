@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sgevf.ui.RefreshRecyclerView;
+import com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView;
 import com.sgevf.ui.refreshRecyclerView.RefreshLoadListener;
 
 import java.util.ArrayList;
@@ -75,6 +75,4 @@ public class MainActivity extends AppCompatActivity implements RefreshLoadListen
             recyclerView.stopRefresh(!list1.isEmpty());
         }
     }
-
-
 }
