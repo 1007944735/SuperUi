@@ -275,4 +275,10 @@ public class ScrollingBanner extends FrameLayout implements ViewPager.OnPageChan
         selectedIndicator = box.getChildAt(i);
         mIndicatorAdapter.selectedIndicator(selectedIndicator);
     }
+
+    public void setIndicatorAdapter(IndicatorAdapter indicatorAdapter) {
+        this.mIndicatorAdapter = indicatorAdapter;
+        selectedIndicator=null;
+
+    }
 }

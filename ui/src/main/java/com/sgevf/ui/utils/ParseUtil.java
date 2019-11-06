@@ -3,7 +3,7 @@ package com.sgevf.ui.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParseUtils {
+public class ParseUtil {
     public static List<String> arrayToList(String[] strings) {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < strings.length; i++) {
