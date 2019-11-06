@@ -1,4 +1,4 @@
-package com.sgevf.ui;
+package com.sgevf.ui.refreshRecyclerView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.sgevf.ui.R;
 import com.sgevf.ui.refreshRecyclerView.RefreshLoadListener;
 import com.sgevf.ui.refreshRecyclerView.RefreshRecyclerAdapter;
 

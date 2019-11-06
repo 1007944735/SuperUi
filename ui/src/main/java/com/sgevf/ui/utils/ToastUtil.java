@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
-public class ToastUtils {
+public class ToastUtil {
     private static Field sField_TN;
     private static Field sField_TN_Handler;
     static{

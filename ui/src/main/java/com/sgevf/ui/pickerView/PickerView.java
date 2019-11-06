@@ -1,4 +1,4 @@
-package com.sgevf.ui;
+package com.sgevf.ui.pickerView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,7 +12,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.sgevf.ui.utils.ParseUtils;
+import com.sgevf.ui.R;
+import com.sgevf.ui.utils.ParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class PickerView extends View {
 
     public void setData(List<String> list) {
         this.dataList = list;
-        ParseUtils.copyList(list, sourceList);
+        ParseUtil.copyList(list, sourceList);
         currentItem = list.size() / 4;
         selectItem = currentItem;
         invalidate();
