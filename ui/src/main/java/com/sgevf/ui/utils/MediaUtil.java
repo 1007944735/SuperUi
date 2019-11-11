@@ -1,14 +1,11 @@
 package com.sgevf.ui.utils;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
+import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 
 import com.sgevf.ui.BuildConfig;
@@ -19,26 +16,12 @@ import java.io.File;
 public class MediaUtil {
     /**
      * 打开系统相机
-     *
      * @param context
+     * @param file
      * @param requestCode
+     * @return
      */
-    public static void openSysCamera(Activity context, File file, int requestCode) {
-        int version = Build.VERSION.SDK_INT;
-        if (version >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA}, requestCode);
-            } else {
-                openCamera(context,file);
-            }
-
-        } else {
-            openCamera(context,file);
-        }
-    }
-
-    //打开相机
-    private static Uri openCamera(Context context, File file) {
+    private static Uri openCamera(Context context, File file, int requestCode) {
         if (file == null) return null;
         Uri uri = null;
         int version = Build.VERSION.SDK_INT;
@@ -52,6 +35,22 @@ public class MediaUtil {
             uri = Uri.fromFile(file);
 
         }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        ((Activity) context).startActivityForResult(intent,requestCode);
         return uri;
     }
+
+    /**
+     * 打开系统相册
+     * @param context
+     * @param requestCode
+     */
+    private static void openAlbum(Context context,int requestCode){
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+        ((Activity) context).startActivityForResult(intent,requestCode);
+    }
+
 }
