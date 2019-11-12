@@ -1,5 +1,9 @@
 package com.sgevf.superui;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +11,10 @@ import android.util.Log;
 
 import com.sgevf.ui.banner.ScrollingBanner;
 import com.sgevf.ui.banner.DefaultScrollingAdapter;
+import com.sgevf.ui.utils.NotificationUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ScrollingBannerTestActivity extends AppCompatActivity {
 
@@ -29,5 +35,9 @@ public class ScrollingBannerTestActivity extends AppCompatActivity {
 
             }
         }));
+
+        NotificationUtil.init(getApplication(), Arrays.asList(new NotificationUtil.NotificationChannelInfo("1", "test", NotificationManager.IMPORTANCE_DEFAULT)));
+        PendingIntent intent=PendingIntent.getBroadcast(this,1000,new Intent("com.sgevf.superui.test"),PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationUtil.create(this, 0, "1", true, "测试", "测试标题", "测试内容", R.mipmap.ic_launcher, intent);
     }
 }

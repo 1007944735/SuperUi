@@ -134,7 +134,7 @@ public class NotificationUtil {
         String name;
         int importance;
 
-        NotificationChannelInfo(String id, String name, int importance) {
+        public NotificationChannelInfo(String id, String name, int importance) {
             this.id = id;
             this.name = name;
             this.importance = importance;

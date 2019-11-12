@@ -20,6 +20,11 @@
         </activity>
         <activity android:name=".MultiListActivity" />
 
+        <receiver android:name=".TestReceiver">
+            <intent-filter>
+                <action android:name="com.sgevf.superui.test"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
