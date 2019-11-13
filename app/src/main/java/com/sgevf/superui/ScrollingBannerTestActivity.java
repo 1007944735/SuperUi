@@ -1,5 +1,7 @@
 package com.sgevf.superui;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +9,10 @@ import android.util.Log;
 
 import com.sgevf.ui.banner.ScrollingBanner;
 import com.sgevf.ui.banner.DefaultScrollingAdapter;
+import com.sgevf.ui.utils.NotificationUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ScrollingBannerTestActivity extends AppCompatActivity {
 
@@ -29,5 +33,7 @@ public class ScrollingBannerTestActivity extends AppCompatActivity {
 
             }
         }));
+        NotificationUtil.init(getApplication(), Arrays.asList(new NotificationUtil.NotificationChannelInfo("0", "name", NotificationManager.IMPORTANCE_HIGH)));
+        NotificationUtil.create(1, "0", true, "asd", "asd", "asd", R.mipmap.ic_launcher, null);
     }
 }
