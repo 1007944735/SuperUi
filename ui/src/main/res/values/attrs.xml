@@ -10,10 +10,10 @@
     </declare-styleable>
 
     <declare-styleable name="ScrollingBanner">
-        <attr name="delayTime" format="integer"></attr>
-        <attr name="scrollTime" format="integer"></attr>
-        <attr name="scrollState" format="boolean"></attr>
-        <attr name="autoScroll" format="boolean"></attr>
+        <attr name="delayTime" format="integer"/>
+        <attr name="scrollTime" format="integer"/>
+        <attr name="scrollState" format="boolean"/>
+        <attr name="autoScroll" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="CustomTabLayout">

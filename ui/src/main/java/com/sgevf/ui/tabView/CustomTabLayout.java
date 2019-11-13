@@ -3,19 +3,23 @@ package com.sgevf.ui.tabView;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sgevf.ui.R;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +29,7 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
     private static final int DEFAULT_TAB_TEXT_COLOR = Color.parseColor("#333333");
     private static final int DEFAULT_TAB_BACKGROUND_COLOR = Color.WHITE;
     private static final int DEFAULT_TAB_INDICATOR_HEIGHT = 10;
-    private static final int DEFAULT_TAB_INDICATOR_WIDTH = 0;
+    private static final int DEFAULT_TAB_INDICATOR_WIDTH = ViewGroup.LayoutParams.MATCH_PARENT;
     private static final int DEFAULT_TAB_INDICATOR_COLOR = Color.BLUE;
     private int mTabTextSize;//tab 字体大小
     private int mTabSelectedTextSize;//tab 选中字体大小
@@ -52,7 +56,7 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
     }
 
     public CustomTabLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, 0);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     public CustomTabLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -102,24 +106,59 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
         mTabTextLists.add(tab);
         View item = getItemView(tab);
         mTabViewLists.add(item);
-
-
+        mTabLayout.addTab(mTabLayout.newTab().setCustomView(item));
     }
 
     private View getItemView(String tab) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_tab_layout, null);
-        LinearLayout llCustomTab=view.findViewById(R.id.ll_custom_tab);
-        TextView mTabText=view.findViewById(R.id.custom_tab_text);
+        LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
+        //背景色
+        llCustomTab.setBackgroundColor(mTabBackgroundColor);
+        //字体
+        TextView mTabText = view.findViewById(R.id.custom_tab_text);
         mTabText.setText(tab);
-        View mTabIndicator=view.findViewById(R.id.custom_tab_indicator);
-
+        mTabText.setTextSize(Dimension.PX, mTabTextSize);
+        mTabText.setTextColor(mTabTextColor);
+        //下划线
+        View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
+        ViewGroup.LayoutParams lp = mTabIndicator.getLayoutParams();
+        lp.width = mTabIndicatorWidth;
+        lp.height = mTabIndicatorHeight;
+        mTabIndicator.setLayoutParams(lp);
         return view;
+    }
+
+
+    public List<View> getTabViewLists() {
+        return mTabViewLists;
     }
 
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-
+        //改变每个tab 的状态
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            View view = mTabLayout.getTabAt(i).getCustomView();
+            if (view == null) {
+                return;
+            }
+            TextView mTabText = view.findViewById(R.id.custom_tab_text);
+            View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
+            LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
+            if (i == tab.getPosition()) {
+                //选中
+                mTabText.setTextSize(Dimension.PX, mTabSelectedTextSize);
+                mTabText.setTextColor(mTabSelectedTextColor);
+                mTabIndicator.setVisibility(VISIBLE);
+                mTabIndicator.setBackgroundColor(mTabIndicatorColor);
+                llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+            } else {
+                mTabText.setTextSize(Dimension.PX, mTabTextSize);
+                mTabText.setTextColor(mTabTextColor);
+                mTabIndicator.setVisibility(INVISIBLE);
+                llCustomTab.setBackgroundColor(mTabBackgroundColor);
+            }
+        }
     }
 
     @Override
@@ -132,5 +171,64 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
 
     public void addOnTabSelectedListener(TabLayout.OnTabSelectedListener onTabSelectedListener) {
         mTabLayout.addOnTabSelectedListener(onTabSelectedListener);
+    }
+
+    //关联viewpager
+    public void setupWithViewPager(ViewPager viewPager) {
+        mTabLayout.addOnTabSelectedListener(new ViewPagerOnTabSelectedListener(viewPager, this));
+    }
+
+    private class ViewPagerOnTabSelectedListener implements TabLayout.BaseOnTabSelectedListener {
+        private ViewPager mViewPager;
+        private WeakReference<CustomTabLayout> mTabLayout;
+
+        public ViewPagerOnTabSelectedListener(ViewPager viewPager, CustomTabLayout tabLayout) {
+            this.mViewPager = viewPager;
+            mTabLayout = new WeakReference<>(tabLayout);
+        }
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            mViewPager.setCurrentItem(tab.getPosition());
+            CustomTabLayout customTabLayout = mTabLayout.get();
+            if (customTabLayout != null) {
+                List<View> tabs = customTabLayout.getTabViewLists();
+                if (tabs == null || tabs.isEmpty()) {
+                    return;
+                }
+                for (int i = 0; i < tabs.size(); i++) {
+                    View view = tabs.get(i);
+                    if (view == null) {
+                        return;
+                    }
+                    TextView mTabText = view.findViewById(R.id.custom_tab_text);
+                    View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
+                    LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
+                    if (i == tab.getPosition()) {
+                        //选中
+                        mTabText.setTextSize(Dimension.PX, mTabSelectedTextSize);
+                        mTabText.setTextColor(mTabSelectedTextColor);
+                        mTabIndicator.setVisibility(VISIBLE);
+                        mTabIndicator.setBackgroundColor(mTabIndicatorColor);
+                        llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+                    } else {
+                        mTabText.setTextSize(Dimension.PX, mTabTextSize);
+                        mTabText.setTextColor(mTabTextColor);
+                        mTabIndicator.setVisibility(INVISIBLE);
+                        llCustomTab.setBackgroundColor(mTabBackgroundColor);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 }

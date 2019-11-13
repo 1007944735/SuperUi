@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.sgevf.ui.banner.ScrollingBanner;
 import com.sgevf.ui.banner.DefaultScrollingAdapter;
+import com.sgevf.ui.tabView.CustomTabLayout;
 import com.sgevf.ui.utils.NotificationUtil;
 
 import java.util.ArrayList;
@@ -35,5 +36,14 @@ public class ScrollingBannerTestActivity extends AppCompatActivity {
         }));
         NotificationUtil.init(getApplication(), Arrays.asList(new NotificationUtil.NotificationChannelInfo("0", "name", NotificationManager.IMPORTANCE_HIGH)));
         NotificationUtil.create(1, "0", true, "asd", "asd", "asd", R.mipmap.ic_launcher, null);
+
+        CustomTabLayout tabLayout=findViewById(R.id.tabLayout);
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
+        tabLayout.addTabItem("123");
     }
 }
