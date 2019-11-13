@@ -22,6 +22,7 @@ import java.util.List;
 public class NotificationUtil {
     private static List<String> channelIds;
     private static NotificationManager manager;
+    private static Application mContext;
 
     /**
      * 初始化,适配Android 8.0 消息推送
@@ -29,6 +30,7 @@ public class NotificationUtil {
      * @param channels
      */
     public static void init(Application context, List<NotificationChannelInfo> channels) {
+        mContext = context;
         channelIds = new ArrayList<>();
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -44,12 +46,11 @@ public class NotificationUtil {
     /**
      * 显示消息
      *
-     * @param context
      * @param notification 消息
      * @param id           notification id
      */
-    public static void notify(Context context, int id, Notification notification) {
-        if (isNotificationEnabled(context)) {
+    public static void notify(int id, Notification notification) {
+        if (isNotificationEnabled()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (TextUtils.isEmpty(notification.getChannelId())) {
                     throw new RuntimeException("above android 8.0,notification need a channelId");
@@ -61,14 +62,13 @@ public class NotificationUtil {
             }
         } else {
             //打开通知设置
-            openNotificationSet(context);
+            openNotificationSet();
         }
     }
 
     /**
      * 创建notification
      *
-     * @param context
      * @param id
      * @param channelId
      * @param autoCancel
@@ -78,8 +78,8 @@ public class NotificationUtil {
      * @param icon
      * @param intent
      */
-    public static void create(Context context, int id, String channelId, boolean autoCancel, String ticker, String title, String text, int icon, PendingIntent intent) {
-        Notification notification = new NotificationCompat.Builder(context, channelId)
+    public static void create(int id, String channelId, boolean autoCancel, String ticker, String title, String text, int icon, PendingIntent intent) {
+        Notification notification = new NotificationCompat.Builder(mContext, channelId)
                 .setAutoCancel(autoCancel)
                 .setTicker(ticker)
                 .setContentText(text)
@@ -87,41 +87,40 @@ public class NotificationUtil {
                 .setSmallIcon(icon)
                 .setContentIntent(intent)
                 .build();
-        notify(context, id, notification);
+        notify(id, notification);
     }
 
     /**
      * 打开系统通知设置
      */
-    private static void openNotificationSet(Context context) {
+    private static void openNotificationSet() {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //android 8.0以上
             intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-            intent.putExtra("android.provider.extra.APP_PACKAGE", context.getPackageName());
+            intent.putExtra("android.provider.extra.APP_PACKAGE", mContext.getPackageName());
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //android 5.0-7.0
             intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-            intent.putExtra("app_package", context.getPackageName());
-            intent.putExtra("app_uid", context.getApplicationInfo().uid);
+            intent.putExtra("app_package", mContext.getPackageName());
+            intent.putExtra("app_uid", mContext.getApplicationInfo().uid);
         } else {
             intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+            intent.setData(Uri.fromParts("package", mContext.getPackageName(), null));
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        mContext.startActivity(intent);
     }
 
     /**
      * 判断应用是否开启权限
      *
-     * @param context
      * @return
      */
-    public static boolean isNotificationEnabled(Context context) {
+    public static boolean isNotificationEnabled() {
         boolean isOpened = false;
         try {
-            isOpened = NotificationManagerCompat.from(context).areNotificationsEnabled();
+            isOpened = NotificationManagerCompat.from(mContext).areNotificationsEnabled();
         } catch (Exception e) {
             e.printStackTrace();
             isOpened = false;
