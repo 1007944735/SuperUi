@@ -113,7 +113,7 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_tab_layout, null);
         LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
         //背景色
-        llCustomTab.setBackgroundColor(mTabBackgroundColor);
+//        llCustomTab.setBackgroundColor(mTabBackgroundColor);
         //字体
         TextView mTabText = view.findViewById(R.id.custom_tab_text);
         mTabText.setText(tab);
@@ -151,12 +151,12 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
                 mTabText.setTextColor(mTabSelectedTextColor);
                 mTabIndicator.setVisibility(VISIBLE);
                 mTabIndicator.setBackgroundColor(mTabIndicatorColor);
-                llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+//                llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
             } else {
                 mTabText.setTextSize(Dimension.PX, mTabTextSize);
                 mTabText.setTextColor(mTabTextColor);
                 mTabIndicator.setVisibility(INVISIBLE);
-                llCustomTab.setBackgroundColor(mTabBackgroundColor);
+//                llCustomTab.setBackgroundColor(mTabBackgroundColor);
             }
         }
     }

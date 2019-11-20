@@ -12,22 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ScrollingBannerTestActivity"></activity>
-        <activity android:name=".MultiListActivity" />
-        <activity android:name=".ScrollStarTestActivity">
-
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".TestReceiver">
-            <intent-filter>
-                <action android:name="com.sgevf.superui.test" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
