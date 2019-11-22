@@ -33,4 +33,8 @@
             <enum name="mode_scroll" value="2" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="FlowHorizontalView">
+        <attr name="rowSpace" format="dimension" />
+        <attr name="viewSpace" format="dimension" />
+    </declare-styleable>
 </resources>
