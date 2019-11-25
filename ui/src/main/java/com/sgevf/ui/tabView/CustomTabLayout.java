@@ -121,8 +121,8 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
         mTabText.setTextColor(mTabTextColor);
         //下划线
         View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
-        ViewGroup.LayoutParams lp = mTabIndicator.getLayoutParams();
-        lp.width = mTabIndicatorWidth;
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+        lp.width = 100;
         lp.height = mTabIndicatorHeight;
         mTabIndicator.setLayoutParams(lp);
         return view;
