@@ -32,6 +32,8 @@ public class SuperRefreshView extends LinearLayout {
     private boolean canScrollHeader;
     private boolean canScrollFooter;
 
+    private boolean isRecyclerScroll;
+
     public SuperRefreshView(Context context) {
         super(context);
         init();
@@ -63,9 +65,9 @@ public class SuperRefreshView extends LinearLayout {
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();
-            int childWidthSpec = MeasureSpec.makeMeasureSpec(widthSize - lp.leftMargin - lp.rightMargin - paddingLeft - paddingRight, MeasureSpec.EXACTLY);
-//            int childWidthSpec = getChildMeasureSpec(widthMeasureSpec,
-//                    paddingLeft + paddingRight, getMeasuredWidth() - lp.leftMargin - lp.rightMargin);
+//            int childWidthSpec = MeasureSpec.makeMeasureSpec(widthSize - lp.leftMargin - lp.rightMargin - paddingLeft - paddingRight, MeasureSpec.EXACTLY);
+            int childWidthSpec = getChildMeasureSpec(widthMeasureSpec,
+                    paddingLeft + paddingRight, getMeasuredWidth() - lp.leftMargin - lp.rightMargin);
             int childHeightSpec = getChildMeasureSpec(heightMeasureSpec,
                     paddingTop + paddingBottom + lp.topMargin + lp.bottomMargin, lp.height);
             child.measure(childWidthSpec, childHeightSpec);
@@ -82,7 +84,7 @@ public class SuperRefreshView extends LinearLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int top = 0;
+        int top = -headerHeight;
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             child.layout(0, top, child.getMeasuredWidth(), top + child.getMeasuredHeight());
@@ -99,13 +101,13 @@ public class SuperRefreshView extends LinearLayout {
             @Override
             public void onGlobalLayout() {
                 mRecyclerView = (RecyclerView) getChildAt(1);
-                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        canScrollHeader = recyclerView.canScrollHorizontally(-1);
-                        canScrollFooter = recyclerView.canScrollHorizontally(1);
-                    }
-                });
+//                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                    @Override
+//                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//
+//                        Log.d("TAG", "onScrolled: "+canScrollFooter);
+//                    }
+//                });
                 addFooterView();
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -129,7 +131,6 @@ public class SuperRefreshView extends LinearLayout {
         if (footerView == null) {
             footerView = new FooterView(getContext());
         }
-
         if (indexOfChild(footerView.getFooterView()) == -1) {
             ViewGroup parent = (ViewGroup) footerView.getFooterView().getParent();
             if (parent != null) {
@@ -140,19 +141,59 @@ public class SuperRefreshView extends LinearLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        canScrollHeader = mRecyclerView.canScrollVertically(-1);
+        Log.d("TAG", "canScrollHeader: " + canScrollHeader);
+        canScrollFooter = mRecyclerView.canScrollVertically(1);
+        Log.d("TAG", "canScrollFooter: " + canScrollFooter);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastY = ev.getY();
+                if (canScrollHeader && canScrollFooter) {
+                    isRecyclerScroll = true;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                moveY += ev.getY() - lastY;
-                scrollTo(getLeft(), (int) (getTop() - moveY));
-                lastY = ev.getY();
+                float move = ev.getY() - lastY;
+//                Log.d("TAG", "dispatchTouchEvent: " + getScrollY());
+                if (move > 0) {
+                    //下拉
+                    if ((!canScrollHeader && getScrollY() <= 0)) {
+                        if (isRecyclerScroll) {
+                            lastY = ev.getY();
+                            Log.d("TAG", "dispatchTouchEvent: " + lastY);
+                            isRecyclerScroll = false;
+                        }
+                        moveY += ev.getY() - lastY;
+                        Log.d("TAG", "dispatchTouch1: " + getTop());
+                        scrollTo(getLeft(), (int) (getTop() - moveY));
+                        lastY = ev.getY();
+                        return true;
+                    }
+                } else {
+                    //上滑
+                    if ((!canScrollFooter && getScaleY() >= 0)) {
+                        if (isRecyclerScroll) {
+                            lastY = ev.getY();
+                            Log.d("TAG", "dispatchTouchEvent: " + lastY);
+                            isRecyclerScroll = false;
+                        }
+                        moveY += ev.getY() - lastY;
+                        scrollTo(getLeft(), (int) (getTop() - moveY));
+                        lastY = ev.getY();
+                        return true;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (getScaleY() != 0) {
+                    mScroller.startScroll(getScrollX(), getScrollY(), 0, 0 - getScrollY(), 500);
+                    invalidate();
+                }
+                moveY = 0;
                 break;
         }
-        ;
-        return super.onInterceptTouchEvent(ev);
+        return mRecyclerView.dispatchTouchEvent(ev);
     }
 
     @Override
