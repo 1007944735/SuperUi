@@ -29,9 +29,11 @@
         <attr name="tabIndicatorColor" format="color" />
 
         <attr name="tabType" format="enum">
-            <enum name="mode_fix" value="1" />
-            <enum name="mode_scroll" value="2" />
+            <enum name="modeFix" value="1" />
+            <enum name="modeScroll" value="2" />
         </attr>
+
+        <attr name="autoIndicatorWidth" format="boolean" />
     </declare-styleable>
     <declare-styleable name="FlowHorizontalView">
         <attr name="rowSpace" format="dimension" />

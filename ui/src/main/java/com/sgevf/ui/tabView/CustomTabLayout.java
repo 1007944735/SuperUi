@@ -8,8 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +25,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-//https://www.jianshu.com/p/83922d08250b
 public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabSelectedListener {
-    private static final int DEFAULT_TAB_TEXT_SIZE = 20;
+    private static final int DEFAULT_TAB_TEXT_SIZE = 14;
     private static final int DEFAULT_TAB_TEXT_COLOR = Color.parseColor("#333333");
     private static final int DEFAULT_TAB_BACKGROUND_COLOR = Color.WHITE;
     private static final int DEFAULT_TAB_INDICATOR_HEIGHT = 10;
@@ -41,6 +42,7 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
     private int mTabIndicatorWidth;//tab 下划线宽度
     private int mTabIndicatorColor;//tab 下划线颜色
     private int mTabMode;//tab 是否滚动
+    private boolean autoIndicatorWidth;//下划线宽度与字体相同
 
     private TabLayout mTabLayout;
 
@@ -79,6 +81,7 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
             mTabIndicatorWidth = a.getDimensionPixelSize(R.styleable.CustomTabLayout_tabIndicatorWidth, DEFAULT_TAB_INDICATOR_WIDTH);
             mTabIndicatorColor = a.getColor(R.styleable.CustomTabLayout_tabIndicatorColor, DEFAULT_TAB_INDICATOR_COLOR);
             mTabMode = a.getInt(R.styleable.CustomTabLayout_tabType, 1);
+            autoIndicatorWidth = a.getBoolean(R.styleable.CustomTabLayout_autoIndicatorWidth, false);
         } finally {
             if (a != null) {
                 a.recycle();
@@ -86,6 +89,15 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
         }
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        for (View view : mTabViewLists) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.height = getMeasuredHeight();
+            view.setLayoutParams(layoutParams);
+        }
+    }
 
     private void initView(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_tab_layout, this, true);
@@ -111,18 +123,17 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
 
     private View getItemView(String tab) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_tab_layout, null);
-        LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
         //背景色
-//        llCustomTab.setBackgroundColor(mTabBackgroundColor);
+        view.setBackgroundColor(mTabBackgroundColor);
         //字体
         TextView mTabText = view.findViewById(R.id.custom_tab_text);
         mTabText.setText(tab);
-        mTabText.setTextSize(Dimension.PX, mTabTextSize);
+        mTabText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabTextSize);
         mTabText.setTextColor(mTabTextColor);
         //下划线
         View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
-        lp.width = 100;
+        lp.width = autoIndicatorWidth ? (int) getTextWidth(tab, mTabTextSize) : mTabIndicatorWidth;
         lp.height = mTabIndicatorHeight;
         mTabIndicator.setLayoutParams(lp);
         return view;
@@ -144,19 +155,26 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
             }
             TextView mTabText = view.findViewById(R.id.custom_tab_text);
             View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
-            LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
             if (i == tab.getPosition()) {
                 //选中
-                mTabText.setTextSize(Dimension.PX, mTabSelectedTextSize);
+                mTabText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabSelectedTextSize);
                 mTabText.setTextColor(mTabSelectedTextColor);
                 mTabIndicator.setVisibility(VISIBLE);
                 mTabIndicator.setBackgroundColor(mTabIndicatorColor);
-//                llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+                view.setBackgroundColor(mTabSelectedBackgroundColor);
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabSelectedTextSize) : mTabIndicatorWidth;
+                lp.height = mTabIndicatorHeight;
+                mTabIndicator.setLayoutParams(lp);
             } else {
-                mTabText.setTextSize(Dimension.PX, mTabTextSize);
+                mTabText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabTextSize);
                 mTabText.setTextColor(mTabTextColor);
                 mTabIndicator.setVisibility(INVISIBLE);
-//                llCustomTab.setBackgroundColor(mTabBackgroundColor);
+                view.setBackgroundColor(mTabBackgroundColor);
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabTextSize) : mTabIndicatorWidth;
+                lp.height = mTabIndicatorHeight;
+                mTabIndicator.setLayoutParams(lp);
             }
         }
     }
@@ -176,6 +194,57 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
     //关联viewpager
     public void setupWithViewPager(ViewPager viewPager) {
         mTabLayout.addOnTabSelectedListener(new ViewPagerOnTabSelectedListener(viewPager, this));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (getTabViewLists() != null) {
+                    List<View> tabs = getTabViewLists();
+                    if (tabs == null || tabs.isEmpty()) {
+                        return;
+                    }
+                    for (int j = 0; j < tabs.size(); j++) {
+                        View view = tabs.get(j);
+                        if (view == null) {
+                            return;
+                        }
+                        TextView mTabText = view.findViewById(R.id.custom_tab_text);
+                        View mTabIndicator = view.findViewById(R.id.custom_tab_indicator);
+                        LinearLayout llCustomTab = view.findViewById(R.id.ll_custom_tab);
+                        if (j == i) {
+                            //选中
+                            mTabText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabSelectedTextSize);
+                            mTabText.setTextColor(mTabSelectedTextColor);
+                            mTabIndicator.setVisibility(VISIBLE);
+                            mTabIndicator.setBackgroundColor(mTabIndicatorColor);
+                            llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+                            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                            lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabSelectedTextSize) : mTabIndicatorWidth;
+                            lp.height = mTabIndicatorHeight;
+                            mTabIndicator.setLayoutParams(lp);
+                        } else {
+                            mTabText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabTextSize);
+                            mTabText.setTextColor(mTabTextColor);
+                            mTabIndicator.setVisibility(INVISIBLE);
+                            llCustomTab.setBackgroundColor(mTabBackgroundColor);
+                            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                            lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabSelectedTextSize) : mTabIndicatorWidth;
+                            lp.height = mTabIndicatorHeight;
+                            mTabIndicator.setLayoutParams(lp);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     private class ViewPagerOnTabSelectedListener implements TabLayout.BaseOnTabSelectedListener {
@@ -211,11 +280,19 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
                         mTabIndicator.setVisibility(VISIBLE);
                         mTabIndicator.setBackgroundColor(mTabIndicatorColor);
                         llCustomTab.setBackgroundColor(mTabSelectedBackgroundColor);
+                        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                        lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabSelectedTextSize) : mTabIndicatorWidth;
+                        lp.height = mTabIndicatorHeight;
+                        mTabIndicator.setLayoutParams(lp);
                     } else {
                         mTabText.setTextSize(Dimension.PX, mTabTextSize);
                         mTabText.setTextColor(mTabTextColor);
                         mTabIndicator.setVisibility(INVISIBLE);
                         llCustomTab.setBackgroundColor(mTabBackgroundColor);
+                        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabIndicator.getLayoutParams();
+                        lp.width = autoIndicatorWidth ? (int) getTextWidth(mTabTextLists.get(i), mTabSelectedTextSize) : mTabIndicatorWidth;
+                        lp.height = mTabIndicatorHeight;
+                        mTabIndicator.setLayoutParams(lp);
                     }
                 }
             }
@@ -230,5 +307,11 @@ public class CustomTabLayout extends FrameLayout implements TabLayout.BaseOnTabS
         public void onTabReselected(TabLayout.Tab tab) {
 
         }
+    }
+
+    private float getTextWidth(String text, float textSize) {
+        TextPaint paint = new TextPaint();
+        paint.setTextSize(textSize);
+        return paint.measureText(text);
     }
 }
