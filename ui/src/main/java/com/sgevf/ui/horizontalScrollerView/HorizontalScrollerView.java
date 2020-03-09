@@ -31,6 +31,7 @@ public class HorizontalScrollerView extends RecyclerView {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         setLayoutManager(layoutManager);
         addOnScrollListener(mOnScrollListener);
+        setOverScrollMode(View.OVER_SCROLL_NEVER);
     }
 
     private final OnScrollListener mOnScrollListener = new OnScrollListener() {
