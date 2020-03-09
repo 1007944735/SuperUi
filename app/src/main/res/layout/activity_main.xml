@@ -4,24 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<com.sgevf.ui.superRefreshView.SuperRefreshView-->
-        <!--android:id="@+id/superRefreshView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="#0000ff">
-
-        </android.support.v7.widget.RecyclerView>
-    <!--</com.sgevf.ui.superRefreshView.SuperRefreshView>-->
-
-    <com.sgevf.ui.banner.ScrollingBanner
-        android:id="@+id/banner"
+    <com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView
+        android:id="@+id/horizontal_scroll"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-    </com.sgevf.ui.banner.ScrollingBanner>
+        android:layout_height="wrap_content" />
 </LinearLayout>
