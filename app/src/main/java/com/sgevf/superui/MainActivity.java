@@ -6,10 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView;
 
@@ -51,8 +53,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull VH vh, int i) {
+        public void onBindViewHolder(@NonNull VH vh, final int i) {
             vh.content.setText(datas.get(i));
+            vh.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, i + "", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         @Override
@@ -63,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
     private class VH extends RecyclerView.ViewHolder {
         private TextView content;
+        private View itemView;
 
         public VH(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             content = itemView.findViewById(R.id.content);
+
         }
     }
 }
