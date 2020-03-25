@@ -8,4 +8,10 @@
         android:id="@+id/horizontal_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <com.sgevf.ui.audioAnimateView.AudioAnimateView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00ff00"
+        android:padding="10dp" />
 </LinearLayout>
