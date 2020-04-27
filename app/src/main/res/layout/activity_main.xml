@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView
@@ -14,4 +15,14 @@
         android:layout_height="wrap_content"
         android:background="#00ff00"
         android:padding="10dp" />
+
+    <com.sgevf.ui.AudioProgressView.AudioProgressView
+        android:id="@+id/audioProgressView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:pictureSize="200dp"
+        app:torusRadius="10dp"
+        app:progressRadius="5dp"
+        app:playIcon="@mipmap/ico_play"
+        app:pauseIcon="@mipmap/ico_pause"/>
 </LinearLayout>

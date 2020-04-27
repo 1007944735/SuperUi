@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sgevf.ui.AudioProgressView.AudioProgressView;
 import com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView;
 
 import java.util.ArrayList;
@@ -21,18 +22,23 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private HorizontalScrollerView horizontalScroll;
+    private AudioProgressView audioProgressView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        horizontalScroll = findViewById(R.id.horizontal_scroll);
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            list.add(i + "");
-        }
-        Adapter adapter = new Adapter(this, list);
-        horizontalScroll.setAdapter(adapter);
+//        horizontalScroll = findViewById(R.id.horizontal_scroll);
+//        List<String> list = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            list.add(i + "");
+//        }
+//        Adapter adapter = new Adapter(this, list);
+//        horizontalScroll.setAdapter(adapter);
+        audioProgressView = findViewById(R.id.audioProgressView);
+        audioProgressView.setImageUrl("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg");
+        audioProgressView.setMax(4);
+        audioProgressView.setProgress(4);
 
     }
 

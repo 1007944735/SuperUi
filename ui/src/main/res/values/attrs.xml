@@ -39,4 +39,15 @@
         <attr name="rowSpace" format="dimension" />
         <attr name="viewSpace" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="AudioProgressView">
+        <attr name="pictureSize" format="dimension" />
+        <attr name="torusRadius" format="dimension" />
+        <attr name="progressRadius" format="dimension" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="playIcon" format="reference" />
+        <attr name="pauseIcon" format="reference" />
+        <attr name="imageRes" format="reference"/>
+    </declare-styleable>
 </resources>
