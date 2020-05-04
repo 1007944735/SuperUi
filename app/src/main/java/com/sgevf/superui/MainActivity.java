@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.sgevf.ui.AudioProgressView.AudioProgressView;
 import com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView;
+import com.sgevf.ui.panDisplayView.PanDisplayView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HorizontalScrollerView horizontalScroll;
     private AudioProgressView audioProgressView;
+    private PanDisplayView panDisplay;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
 //        Adapter adapter = new Adapter(this, list);
 //        horizontalScroll.setAdapter(adapter);
         audioProgressView = findViewById(R.id.audioProgressView);
+        panDisplay = findViewById(R.id.panDisplay);
         audioProgressView.setImageUrl("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg");
         audioProgressView.setMax(4);
         audioProgressView.setProgress(4);
+        panDisplay.start();
 
     }
 

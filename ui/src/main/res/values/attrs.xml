@@ -50,4 +50,8 @@
         <attr name="pauseIcon" format="reference" />
         <attr name="imageRes" format="reference"/>
     </declare-styleable>
+    
+    <declare-styleable name="PanDisplayView">
+        <attr name="contentRes" format="reference"/>
+    </declare-styleable>
 </resources>
