@@ -5,6 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.sgevf.ui.headBubbleView.HeadBubbleView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView
         android:id="@+id/horizontal_scroll"
         android:layout_width="match_parent"
@@ -30,5 +34,5 @@
         android:id="@+id/panDisplay"
         android:layout_width="300dp"
         android:layout_height="150dp"
-        app:contentRes="@drawable/banner_default_pic"/>
+        app:contentRes="@drawable/banner_default_pic" />
 </LinearLayout>
