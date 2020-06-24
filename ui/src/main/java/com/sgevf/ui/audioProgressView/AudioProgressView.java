@@ -1,4 +1,4 @@
-package com.sgevf.ui.AudioProgressView;
+package com.sgevf.ui.audioProgressView;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -169,7 +169,7 @@ public class AudioProgressView extends View {
 
     private void drawProgress(Canvas canvas) {
         canvas.save();
-        canvas.drawArc(new RectF(mTorusRadius / 2, mTorusRadius / 2, size - mTorusRadius / 2, size - mTorusRadius / 2), -90f, progress, false, mProgressPaint);
+        canvas.drawArc(new RectF(mTorusRadius / 2 - mProgressRadius / 2, mTorusRadius / 2 - mProgressRadius / 2, size - mTorusRadius / 2 + mProgressRadius / 2, size - mTorusRadius / 2 + mProgressRadius / 2), -90f, progress, false, mProgressPaint);
         canvas.restore();
     }
 

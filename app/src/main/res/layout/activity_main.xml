@@ -4,35 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.sgevf.ui.headBubbleView.HeadBubbleView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.sgevf.ui.horizontalScrollerView.HorizontalScrollerView
-        android:id="@+id/horizontal_scroll"
+    <Button
+        android:id="@+id/btn_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.sgevf.ui.audioAnimateView.AudioAnimateView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#00ff00"
-        android:padding="10dp" />
+        android:text="测试"/>
+    <com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView
+        android:id="@+id/refreshRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.sgevf.ui.AudioProgressView.AudioProgressView
-        android:id="@+id/audioProgressView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:pauseIcon="@mipmap/ico_pause"
-        app:pictureSize="200dp"
-        app:playIcon="@mipmap/ico_play"
-        app:progressRadius="5dp"
-        app:torusRadius="10dp" />
-
-    <com.sgevf.ui.panDisplayView.PanDisplayView
-        android:id="@+id/panDisplay"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        app:contentRes="@drawable/banner_default_pic" />
+    </com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView>
 </LinearLayout>

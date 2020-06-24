@@ -1,17 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sgevf.ui" >
+    package="com.sgevf.ui">
 
     <application>
-        <activity android:name=".widget.WebLoadingActivity"
-            android:hardwareAccelerated="true"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-        
+        <activity
+            android:name=".widget.WebLoadingActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:hardwareAccelerated="true" />
+
+        <activity android:name=".refreshLayout.RefreshLayoutTestActivity" />
+
         <provider
-            android:authorities="com.sgevf.ui.fileProvider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.sgevf.ui.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 </manifest>

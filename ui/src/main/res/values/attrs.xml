@@ -54,4 +54,12 @@
     <declare-styleable name="PanDisplayView">
         <attr name="contentRes" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="PromptView">
+        <attr name="tipColor" format="color" />
+        <attr name="tipContentColor" format="color" />
+        <attr name="tipContentSize" format="dimension" />
+        <attr name="tipSize" format="dimension" />
+        <attr name="text" format="integer" />
+    </declare-styleable>
 </resources>
