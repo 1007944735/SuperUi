@@ -177,18 +177,33 @@ public class AudioProgressView extends View {
         canvas.save();
         Bitmap bp = null;
         if (isPlaying) {
-            if (mPlayIconResId == 0) {
+            if (mPauseIconResId == 0) {
                 return;
             }
             bp = BitmapFactory.decodeResource(getResources(), mPauseIconResId);
         } else {
-            if (mPauseIconResId == 0) {
+            if (mPlayIconResId == 0) {
                 return;
             }
             bp = BitmapFactory.decodeResource(getResources(), mPlayIconResId);
         }
-        canvas.drawBitmap(bp, size / 2 - bp.getWidth() / 2, size / 2 - bp.getHeight() / 2, mBitmapPaint);
+        if (bp == null) {
+            canvas.restore();
+            return;
+        }
+        Matrix matrix = createSuitMatrix(bp);
+        canvas.drawBitmap(bp, matrix, mBitmapPaint);
         canvas.restore();
+    }
+
+    private Matrix createSuitMatrix(Bitmap bp) {
+        Matrix matrix = new Matrix();
+        int originIconWidth = bp.getWidth();
+        int originIconHeight = bp.getHeight();
+        float scale = (mPictureSize * 0.36f) / (Math.max(originIconWidth, originIconHeight) * 1.0f);
+        matrix.preScale(scale, scale, originIconWidth / 2, originIconHeight / 2);
+        matrix.postTranslate(size / 2 - originIconWidth / 2, size / 2 - originIconHeight / 2);
+        return matrix;
     }
 
     public void setImageUrl(String url) {
