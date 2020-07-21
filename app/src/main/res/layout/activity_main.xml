@@ -4,15 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <Button
         android:id="@+id/btn_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="测试"/>
+        android:text="测试"
+        android:visibility="gone" />
+
     <com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView
         android:id="@+id/refreshRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
     </com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView>
+
+    <com.sgevf.ui.minionView.MinionView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
