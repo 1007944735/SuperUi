@@ -5,22 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="测试"
-        android:visibility="gone" />
+    <com.sgevf.ui.pickerView.MyPickerView
+        android:id="@+id/myPickerView"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:background="#FF0000"
+        app:minTextSize="20sp"
+        app:maxTextSize="30sp"/>
 
-    <com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView
-        android:id="@+id/refreshRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-    </com.sgevf.ui.refreshRecyclerView.RefreshRecyclerView>
-
-    <com.sgevf.ui.minionView.MinionView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <com.sgevf.ui.pickerView.PickerView
+        android:id="@+id/pickerView"
+        android:layout_width="200dp"
+        android:layout_height="300dp"/>
 </LinearLayout>

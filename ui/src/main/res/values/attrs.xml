@@ -5,7 +5,7 @@
     </declare-styleable>
 
     <declare-styleable name="PickerView">
-        <attr name="selectColor" format="color" />
+        <attr name="selectColor"/>
         <attr name="otherColor" format="color" />
     </declare-styleable>
 
@@ -48,11 +48,11 @@
         <attr name="progressColor" format="color" />
         <attr name="playIcon" format="reference" />
         <attr name="pauseIcon" format="reference" />
-        <attr name="imageRes" format="reference"/>
+        <attr name="imageRes" format="reference" />
     </declare-styleable>
-    
+
     <declare-styleable name="PanDisplayView">
-        <attr name="contentRes" format="reference"/>
+        <attr name="contentRes" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="PromptView">
@@ -61,5 +61,15 @@
         <attr name="tipContentSize" format="dimension" />
         <attr name="tipSize" format="dimension" />
         <attr name="text" format="integer" />
+    </declare-styleable>
+
+    <attr name="selectColor" format="color"/>
+    <declare-styleable name="MyPickerView">
+        <attr name="selectColor"/>
+        <attr name="normalColor" format="color" />
+        <attr name="maxTextSize" format="dimension" />
+        <attr name="minTextSize" format="dimension" />
+        <attr name="maxTextAlpha" format="integer" />
+        <attr name="minTextAlpha" format="integer" />
     </declare-styleable>
 </resources>
